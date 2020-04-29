@@ -4,22 +4,28 @@ body {
   font-family: sans-serif;
   background-color: #f2f2f2;
 }
+.movie-list{
+  width: 100%;
+  height:100%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: flex-start;
+  align-content: flex-start;
+}
 
 .movie-card {
-  background-color: #fff;
-  border: 0;
-  box-shadow: 0 -1px 0 #e0e0e0, 0 0 2px rgba(0, 0, 0, 0.12),
-    0 2px 4px rgba(0, 0, 0, 0.24);
-  padding: 1rem;
-  cursor: pointer;
-  position: relative;
-  margin: 1rem auto;
+  margin: 1rem;
+  width: 97%;
+  
+
+ 
+  
+ 
 }
 
-.movie-director {
-  padding: 4px 0;
-  font-size: 0.8rem;
-}
+
 
 .saved-list {
   background-color: #fff;
@@ -55,17 +61,43 @@ body {
 }
 .save-button {
   position: absolute;
-  top: 25px;
-  right: 25px;
-  border: 1px solid grey;
-  padding: 5px 10px;
-  background-color: lightseagreen;
+  top: 15px;
+  right: 45px;
+  
+ 
+  
 }
-.save-button:hover {
-  background-color: green;
-  color: white;
+.save-button button {
+  
+ background-color: gold;
+ width: 100px;
+  
+}
+.save-button button:hover {
+  
+  background-color: goldenrod;
 }
 
+.edit-buttonCont{
+  position: absolute;
+  top: 75px;
+  right: 45px;
+
+}
+.edit-buttonCont button{
+  width: 100px;
+  background-color: #26a126;
+}
+.delete-buttonCont{
+  position: absolute;
+  top: 135px;
+  right: 45px;
+
+}
+.delete-buttonCont button{
+  width: 100px;
+
+}
 .home-button {
   padding: 5px 10px;
   background-color: lightskyblue;
@@ -75,3 +107,41 @@ body {
   color: red;
   text-align: center;
 }
+
+
+
+/* ========================= */
+
+
+.Form_cont{
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  border: 3px solid gray;
+  height: 35rem;
+  width: 100%;
+}
+.UpdateSavebtnCont{
+margin: 45px;
+}
+
+
+.UpdateSavebtnCont button {
+  
+    background-color: gold;
+    width: 100px;
+     
+   }
+   .UpdateSavebtnCont button:hover {
+     
+     background-color: goldenrod;
+   }
+   .addMovie_btn{
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        
+   }

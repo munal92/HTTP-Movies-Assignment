@@ -1,5 +1,8 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
+import HomeIcon from '@material-ui/icons/Home';
+import Button from '@material-ui/core/Button';
+
 
 function SavedList({ list }) {
   return (
@@ -16,9 +19,17 @@ function SavedList({ list }) {
           </NavLink>
         );
       })}
-      <div className="home-button">
-        <Link to="/">Home</Link>
-      </div>
+      {/* <div className="home-button"> */}
+      <Button
+        variant="contained"
+        color="primary"
+        
+        startIcon={<HomeIcon />}
+      >
+        <Link style={{color:"white",textDecoration:"none"}} to="/">Home</Link>
+      </Button>
+        
+      {/* </div> */}
     </div>
   );
 }
