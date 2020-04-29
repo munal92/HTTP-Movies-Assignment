@@ -1,70 +1,76 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useParams,Link } from "react-router-dom";
 import MovieCard from "./MovieCard";
-import { Link } from "react-router-dom";
+import SaveIcon from '@material-ui/icons/Save';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Button from '@material-ui/core/Button';
 
-export default class Movie extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      movie: null
-    };
-  }
 
-  componentDidMount() {
-    this.fetchMovie(this.props.match.params.id);
-  }
+function Movie(props) {
+  const [movie, setMovie] = useState(null);
+  const params = useParams();
 
-  componentWillReceiveProps(newProps) {
-    if (this.props.match.params.id !== newProps.match.params.id) {
-      this.fetchMovie(newProps.match.params.id);
-    }
-  }
-
-  fetchMovie = id => {
+  const fetchMovie = (id) => {
     axios
       .get(`http://localhost:5000/api/movies/${id}`)
-      .then(res => this.setState({ movie: res.data }))
-      .catch(err => console.log(err.response));
+      .then((res) => setMovie(res.data))
+      .catch((err) => console.log(err.response));
   };
 
-  saveMovie = () => {
-    const addToSavedList = this.props.addToSavedList;
-    addToSavedList(this.state.movie);
+  const saveMovie = () => {
+    props.addToSavedList(movie);
   };
-  deleteMovie = (event ,id) => {
-    event.preventDefault();
-    axios.delete(`http://localhost:5000/api/movies/${id}`)
-         .then( response => {
-            console.log(response)
-            this.props.history.push("/");
-         })
-         .catch(error => {
-            console.log(error);
-         })
- }
 
-  render() {
-    if (!this.state.movie) {
-      return <div>Loading movie information...</div>;
-    }
+  useEffect(() => {
+    fetchMovie(params.id);
+  }, [params.id]);
 
-    return (
-      <div className="save-wrapper">
-        <MovieCard movie={this.state.movie} />
-        <div  className="save-button" onClick={this.saveMovie}>
-          Save
-        </div>
-        <Link className="edit-button" style={{textDecoration: "none" ,color: "black"}} to={`/update-movie/${this.props.match.params.id}`}>Edit</Link>
-        <div className="delete-button"
-          onClick={event => {
-            this.deleteMovie(event, this.props.match.params.id);
-          }}
-          
-        >
-          Delete
-        </div>
-      </div>
-    );
+  if (!movie) {
+    return <div>Loading movie information...</div>;
   }
+
+  return (
+    <div className="save-wrapper">
+      <MovieCard movie={movie} />
+     
+     
+      <div className="save-button" >
+      <Button
+      onClick={saveMovie}
+        variant="contained"
+        
+       
+        startIcon={<SaveIcon />}
+      >
+         Save
+      </Button>
+      </div>
+      <div className="edit-buttonCont" >
+      <Button
+      // onClick={}
+        variant="contained"
+        
+        startIcon={<EditIcon style={{color:"white"}} />}
+      >
+         <Link style={{color:"white",textDecoration:"none"}} to={`/update-movie/${params.id}`}>Edit</Link>
+      </Button>
+      </div>
+      <div className="delete-buttonCont" >
+      <Button
+      // onClick={}
+        variant="contained"
+        color="secondary"
+        onClick={() => (props.deleteItem(params.id), props.getMovieList())}
+        startIcon={<DeleteIcon  />}
+      >
+         <Link style={{color:"white",textDecoration:"none"}} to={`/`}>Delete</Link>
+      </Button>
+      </div>
+      
+    </div>
+  );
 }
+
+export default Movie;

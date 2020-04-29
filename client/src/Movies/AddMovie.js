@@ -1,5 +1,4 @@
-import React,{useState, useEffect} from "react"
-
+import React,{useState} from "react"
 import { makeStyles } from '@material-ui/core/styles';
 import { useParams,Link,useHistory } from "react-router-dom";
 import Input from '@material-ui/core/Input';
@@ -13,7 +12,7 @@ import Title from '@material-ui/icons/Movie';
 import CameraOutlinedIcon from '@material-ui/icons/CameraOutlined';
 import FormatListNumberedOutlinedIcon from '@material-ui/icons/FormatListNumberedOutlined';
 import StarsOutlinedIcon from '@material-ui/icons/StarsOutlined';
-import SaveIcon from '@material-ui/icons/Save';
+import SaveIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import axios from "axios";
 
@@ -22,95 +21,80 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
 }));
-let restoftheArr = []
 
-const UpdateMovie = (props) => {
+
+const AddMovie = (props) => {
     const classes = useStyles();
-    const history =useHistory();
-    const {id} = useParams();
-   
-    
-    const [updateMovie,setUpdateMovie] = useState({
-      id: 0,
-      title: '',
-      director: '',
-      metascore: 0,
-      stars: [],
-  })
+    const history= useHistory();
 
-  
-    
-     useEffect(() => {
-           const selectedItem = props.movies.find(item=>{
-              return `${item.id}` === id ;
-            })
-            if(selectedItem){
-              setUpdateMovie(selectedItem);
-              restoftheArr = props.movies.filter(mv => {
-                return `${mv.id}` !== id;
-              })
-            }
-           
+    const [addMovie,setAddMovie] = useState({
+        id: 0,
+        title: '',
+        director: '',
+        metascore: 0,
+        stars: [],
+    })
 
-    },[id])
 
 const handleChange = e => {
     e.persist();
     // if(e.target.name === "stars"){
      
       
-      setUpdateMovie({ ...updateMovie,stars: [ e.target.value ] })
+    //   setAddMovie({...addMovie, stars: [ e.target.value ] })
     // }else{
      
-      setUpdateMovie({...updateMovie,[e.target.name]: e.target.value })
+      setAddMovie({...addMovie, [e.target.name]: e.target.value })
     // }
     
    }
+
    const addInput = (item="") => {
-    updateMovie.stars.push(item)
-    setUpdateMovie({...updateMovie,stars:[...updateMovie.stars]})
-    console.log("input CHewck", updateMovie)
-
-  }
-
-   const handleSubmit = e => {
-     e.preventDefault();
-     
-    if(updateMovie.title !== ''){
-     axios.put(`http://localhost:5000/api/movies/${id}`, updateMovie)
-    // .then(res =>{ props.setMovieList(restoftheArr.concat(updateMovie).sort((a,b) => (a.id>b.id) ? 1 : -1 ) )
-      .then(res => {props.getMovieList() 
-       
-       history.push("/")
-     
-     }).catch(err => console.log(err))
-
-    }else{
-      alert("put title")
-    }
+     addMovie.stars.push(item)
+     setAddMovie({...addMovie,stars:[...addMovie.stars]})
+     console.log("input CHewck", addMovie)
 
    }
 
 
-   console.log("id",id )
-   console.log("updatedMovie",updateMovie )
-   console.log("restoftheArr",restoftheArr )
-   console.log("movies",props.movies )
+   const handleSubmit = e => {
+     e.preventDefault();
+     if(addMovie.title !== ''){
 
 
+     setAddMovie({...addMovie, id:`${props.movies.length}` })
+     axios.post(`http://localhost:5000/api/movies/`, addMovie)
+     .then(res => {props.getMovieList() 
+        history.push("/")
+
+         
+     })
+        
+    
+     
+     .catch(err => console.log(err))
+     }else{
+      alert("put title")
+    }
+
+
+   }
+
+
+   console.log("son hal",addMovie.id )
 
 
     return (
-        <div className="Form_cont">
+        <div className="Form_cont" >
         
-        <FormControl className={classes.margin}>
+        <FormControl className={classes.margin} >
       <div className={classes.margin}>
-        <Grid container spacing={1} alignItems="flex-end">
-          <Grid item>
-            <Title />
+        <Grid container spacing={1} alignItems="flex-end" defaultValue="Normal">
+          <Grid item >
+            <Title  />
           </Grid>
           <Grid item>
-            <TextField  label="Movie Name" name="title" value={updateMovie.title} onChange={handleChange}  />
+            <TextField  label="Movie Name" name="title" value={addMovie.title} onChange={handleChange}  />
           </Grid>
         </Grid>
       </div>
@@ -120,7 +104,7 @@ const handleChange = e => {
             <CameraOutlinedIcon />
           </Grid>
           <Grid item>
-            <TextField  label="Movie Director"  name="director" value={updateMovie.director} onChange={handleChange}/>
+            <TextField  label="Movie Director"  name="director" value={addMovie.director} onChange={handleChange}/>
           </Grid>
         </Grid>
       </div>
@@ -130,7 +114,7 @@ const handleChange = e => {
             <FormatListNumberedOutlinedIcon />
           </Grid>
           <Grid item>
-            <TextField  label="Meta Score 0-100"  name="metascore" value={ `${ updateMovie.metascore===0 ? "" :  updateMovie.metascore }`  } onChange={handleChange}/>
+            <TextField  label="Meta Score 0-100"  name="metascore" value={ `${ addMovie.metascore===0 ? "" :  addMovie.metascore }`  } onChange={handleChange}/>
           </Grid>
         </Grid>
       </div>
@@ -138,16 +122,16 @@ const handleChange = e => {
         <Grid container spacing={1} alignItems="flex-end">
           <Grid item>
             <StarsOutlinedIcon />
-            </Grid>
-            <Grid item style={{display:"flex",flexDirection:"column"}}>
+          </Grid>
+          <Grid item style={{display:"flex",flexDirection:"column"}}>
             
-            {updateMovie.stars.map((i,index) => (
+            {addMovie.stars.map((i,index) => (
               <TextField 
               key={index}
-              label="Actors" name="stars" value={updateMovie.stars[index]}  type="text"
+              label="Actors" name="stars" value={addMovie.stars[index]}  type="text"
               onChange={e => {
-                updateMovie.stars[index] = e.target.value
-                setUpdateMovie({...updateMovie,stars:[...updateMovie.stars]})
+                addMovie.stars[index] = e.target.value
+                setAddMovie({...addMovie,stars:[...addMovie.stars]})
               }  }
               
               
@@ -166,15 +150,16 @@ const handleChange = e => {
         </Grid>
         
       </div>
+     
       <div className="UpdateSavebtnCont" >
-      <Button
+      <Button style={{marginLeft : "1.5rem"}}
        onClick={handleSubmit}
         variant="contained"
         
         type="submit"
         startIcon={<SaveIcon />}
       >
-         Save
+         Add
       </Button>
       </div>
       </FormControl>
@@ -183,4 +168,4 @@ const handleChange = e => {
     );
 };
 
-export default UpdateMovie;
+export default AddMovie;
